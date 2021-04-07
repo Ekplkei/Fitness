@@ -51,7 +51,7 @@ namespace Fitness.CMD
             {
                 Console.Write($"Введите {name}: ");
                 if (double.TryParse(Console.ReadLine(), out double value) && value>0) return value;
-                else Console.WriteLine($"Неверный формат {name}");
+                else Console.WriteLine($"Неверный формат {name}а");
             }
         }
     }
