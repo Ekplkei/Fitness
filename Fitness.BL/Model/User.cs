@@ -9,7 +9,7 @@ namespace Fitness.BL.Model
     /// <summary>
     /// Пользователь
     /// </summary>
-    public class User
+    [Serializable]public class User
     {
         #region Свойства
         public string Name { get; }
@@ -17,12 +17,12 @@ namespace Fitness.BL.Model
         /// <summary>
         /// Пол
         /// </summary>
-        public Gender Gender { get; }
+        public Gender Gender { get; set; }
 
         /// <summary>
         /// Дата рождения
         /// </summary>
-        public DateTime BirthDate { get; }
+        public DateTime BirthDate { get; set; }
 
         /// <summary>
         /// Вес
@@ -33,6 +33,8 @@ namespace Fitness.BL.Model
         /// Рост
         /// </summary>
         public double Height { get; set; }
+
+        public int Age { get { return yearBirth(); } }
         #endregion
         /// <summary>
         /// Создать нового пользователя
@@ -50,20 +52,30 @@ namespace Fitness.BL.Model
         {
             #region Проверка условий
             if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException("Имя пользователя не может быть пустым или null", nameof(name));
-            if (Gender == null) throw new ArgumentNullException("Пол не может быть null", nameof(gender));
+            if (gender == null) throw new ArgumentNullException("Пол не может быть null", nameof(gender));
             if (birthDate<DateTime.Parse("01.01.1900") || birthDate > DateTime.Now) throw new ArgumentException("Невозможная дата рождения", nameof(birthDate));
             if (weight<=0) throw new ArgumentException("Невозможный вес (<=0)", nameof(weight));
             if (height<=0) throw new ArgumentException("Невозможный рост (<=0)", nameof(height));
             #endregion
-            Name = Name;
-            Gender = Gender;
+            Name = name;
+            Gender = gender;
             BirthDate = birthDate;
-            Weight = Weight;
-            Height = Height;
+            Weight = weight;
+            Height = height;
+        }
+        public int yearBirth()
+        {
+            if (DateTime.Now.Month < BirthDate.Month || (DateTime.Now.Month == BirthDate.Month && (DateTime.Now.Day < BirthDate.Day))) return DateTime.Now.Year - BirthDate.Year - 1;
+            else return DateTime.Now.Year - BirthDate.Year;
+        }
+        public User(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException("Имя пользователя не может быть пустым или null", nameof(name));
+            Name = name;
         }
         public override string ToString()
         {
-            return Name;
+            return Name + " " + Age;
         }
     }
 }
